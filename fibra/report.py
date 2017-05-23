@@ -16,7 +16,8 @@ from flask import current_app, request
 
 from fibra.models import Invoice, db
 from fibra.jinjafilters import moneyfmt_filter
-from fibra.fpdf import FPDF
+
+from fpdf import FPDF
 
 date_fmt = '%d/%m/%Y'
 
