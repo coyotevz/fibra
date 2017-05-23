@@ -143,7 +143,7 @@ class FPDF(object):
         else:
             self.error('Incorrect unit: '+unit)
         #Page format
-        if(isinstance(format,basestring)):
+        if(isinstance(format,str)):
             format=format.lower()
             if(format=='a3'):
                 format=(841.89,1190.55)
@@ -225,7 +225,7 @@ class FPDF(object):
 
     def set_display_mode(self, zoom,layout='continuous'):
         "Set display mode in viewer"
-        if(zoom=='fullpage' or zoom=='fullwidth' or zoom=='real' or zoom=='default' or not isinstance(zoom,basestring)):
+        if(zoom=='fullpage' or zoom=='fullwidth' or zoom=='real' or zoom=='default' or not isinstance(zoom,str)):
             self.zoom_mode=zoom
         else:
             self.error('Incorrect zoom display mode: '+zoom)
@@ -585,7 +585,7 @@ class FPDF(object):
             else:
                 op='S'
             s=sprintf('%.2f %.2f %.2f %.2f re %s ',self.x*k,(self.h-self.y)*k,w*k,-h*k,op)
-        if(isinstance(border,basestring)):
+        if(isinstance(border,str)):
             x=self.x
             y=self.y
             if('L' in border):
@@ -832,7 +832,7 @@ class FPDF(object):
     def ln(self, h=''):
         "Line Feed; default value is last cell height"
         self.x=self.l_margin
-        if(isinstance(h, basestring)):
+        if(isinstance(h, str)):
             self.y+=self.lasth
         else:
             self.y+=h
@@ -948,7 +948,7 @@ class FPDF(object):
                 for pl in self.page_links[n]:
                     rect=sprintf('%.2f %.2f %.2f %.2f',pl[0],pl[1],pl[0]+pl[2],pl[1]-pl[3])
                     annots+='<</Type /Annot /Subtype /Link /Rect ['+rect+'] /Border [0 0 0] '
-                    if(isinstance(pl[4],basestring)):
+                    if(isinstance(pl[4],str)):
                         annots+='/A <</S /URI /URI '+self._textstring(pl[4])+'>>>>'
                     else:
                         l=self.links[pl[4]]
@@ -962,7 +962,7 @@ class FPDF(object):
             self._out('endobj')
             #Page content
             if self.compress:
-                p = zlib.compress(self.pages[n])
+                p = zlib.compress(self.pages[n].encode('utf-8'))
             else:
                 p = self.pages[n]
             self._newobj()
@@ -989,7 +989,7 @@ class FPDF(object):
             self._newobj()
             self._out('<</Type /Encoding /BaseEncoding /WinAnsiEncoding /Differences ['+self.diffs[diff]+']>>')
             self._out('endobj')
-        for name,info in self.font_files.iteritems():
+        for name,info in self.font_files.items():
             #Font file embedding
             self._newobj()
             self.font_files[name]['n']=self.n
@@ -1017,7 +1017,7 @@ class FPDF(object):
             self._out('>>')
             self._putstream(font)
             self._out('endobj')
-        for k,font in self.fonts.iteritems():
+        for k,font in self.fonts.items():
             #Font objects
             self.fonts[k]['n']=self.n+1
             type=font['type']
@@ -1060,7 +1060,7 @@ class FPDF(object):
                 #Descriptor
                 self._newobj()
                 s='<</Type /FontDescriptor /FontName /'+name
-                for k,v in font['desc'].iteritems():
+                for k,v in font['desc'].items():
                     s+=' /'+str(k)+' '+str(v)
                 filename=font['file']
                 if(filename):
@@ -1081,7 +1081,7 @@ class FPDF(object):
         filter=''
         if self.compress:
             filter='/Filter /FlateDecode '
-        for filename,info in self.images.iteritems():
+        for filename,info in self.images.items():
             self._newobj()
             self.images[filename]['n']=self.n
             self._out('<</Type /XObject')
@@ -1167,7 +1167,7 @@ class FPDF(object):
             self._out('/OpenAction [3 0 R /FitH null]')
         elif(self.zoom_mode=='real'):
             self._out('/OpenAction [3 0 R /XYZ null null 1]')
-        elif(not isinstance(self.zoom_mode,basestring)):
+        elif(not isinstance(self.zoom_mode,str)):
             self._out('/OpenAction [3 0 R /XYZ null null '+(self.zoom_mode/100)+']')
         if(self.layout_mode=='single'):
             self._out('/PageLayout /SinglePage')
