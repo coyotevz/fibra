@@ -16,19 +16,15 @@ from fibra.jinjafilters import dateformat_filter, timeago_filter, moneyfmt_filte
 app = Flask(__name__)
 
 # Config
-try:
-    app.config.from_object('localconfig.LocalConfig')
-    app.logger.info("Config: using localconfig")
-except ImportError:
-    if os.getenv('DEV') == 'yes':
-        app.config.from_object('fibra.config.DevelopmentConfig')
-        app.logger.info("Config: Development")
-    elif os.getenv('TEST') == 'yes':
-        app.config.from_object('fibra.config.TestConfig')
-        app.logger.info("Config: Test")
-    else:
-        app.config.from_object('fibra.config.ProductionConfig')
-        app.logger.info("Config: Production")
+if os.getenv('DEV') == 'yes':
+    app.config.from_object('fibra.config.DevelopmentConfig')
+    app.logger.info("Config: Development")
+elif os.getenv('TEST') == 'yes':
+    app.config.from_object('fibra.config.TestConfig')
+    app.logger.info("Config: Test")
+else:
+    app.config.from_object('fibra.config.ProductionConfig')
+    app.logger.info("Config: Production")
 
 # Jinja2 extensions
 app.jinja_options['extensions'].extend([
