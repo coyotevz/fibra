@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% from "macros.html" import render_field %}
+
+{% block main %}
+<form id="edit-invoice" method="post" action=".">
+  <h2>Nuevo Documento</h2>
+
+  {{ form.hidden_tag() }}
+  <div class="fieldrow first">
+    {{ render_field(form.customer, required="required", autofocus="autofocus") }}
+  </div>
+  <div class="fieldrow">  
+    {{ render_field(form.type, required="required") }}
+    {{ render_field(form.point_sale, required="required") }}
+    {{ render_field(form.number, required="required", autocomplete="off") }}
+    {{ render_field(form.issue_date, required="required", autocomplete="off", class="datepicker") }}
+    {{ render_field(form.expiration_date, required="required", autocomplete="off", class="datepicker") }}
+  </div>
+  <div class="fieldrow">
+    {{ render_field(form.total, required="required", autocomplete="off", class="moneyformat") }}
+  </div>
+  <div class="fieldrow">  
+    {{ render_field(form.notes, cols=60) }}
+  </div>
+  <div class="fieldrow last">  
+    {{ form_button('Guardar') }}
+  </div>
+
+</form>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+      $('#customer').select_autocomplete({
+        width: $('#customer').width()
+      }).select(function() {
+        var inputs = $(this).closest('form').find(':input');
+        console.log(inputs);
+        inputs.eq(inputs.index(this) + 2).focus();
+      });
+
+      $('#type').blur(function() {
+        $el = $(this);
+        if ($el.val() !== "") {
+          $el.val($el.val().toUpperCase());
+        }
+      });
+
+      $('#point_sale').keypress(function(evt) {
+        if (evt.which !== 0 && evt.charCode !== 0) {
+          if (String.fromCharCode(evt.which).match(/\d/)) return true;
+          return false;
+        }
+      }).blur(function() {
+        $(this).formatNumber({format:"0000"})
+      });
+
+      $('#number').keypress(function(evt) {
+        if (evt.which !== 0 && evt.charCode !== 0) {
+          if (String.fromCharCode(evt.which).match(/\d/)) return true;
+          return false;
+        }
+      }).blur(function() {
+        $(this).formatNumber({format:"00000000"});
+        });
+
+      /* Set point_sale default value */
+      if (!$('#point_sale').val()) $('#point_sale').val("0001");
+      $('input.autocomplete-input').focus();
+  });
+</script>
+{% endblock %}
+{# vim:ft=xhtml.jinja:sw=2
+#}

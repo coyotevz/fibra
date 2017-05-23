@@ -1,0 +1,19 @@
+@import "helpers";
+
+.icon,
+.ui-datepicker-prev,
+.ui-datepicker-next {
+  @include icon;
+}
+
+.icon {
+  /* development icon */
+  @include icon-sprite(0px);
+}
+
+.ui-datepicker-prev { @include icon-sprite(16px); }
+.ui-datepicker-next { @include icon-sprite(32px); }
+.icon-contact-edit { @include icon-sprite(48px); }
+.icon-edit { @include icon-sprite(64px); }
+.icon-plus { @include icon-sprite(80px); }
+.icon-home { @include icon-sprite(112px); }

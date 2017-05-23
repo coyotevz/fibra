@@ -1,0 +1,169 @@
+@import "helpers";
+
+$field-font-size: 18px;
+$field-background-color: #fff;
+$field-border-color: #ccc;
+$field-focus-border-color: #4d90fe;
+$field-border-width: 1px;
+$field-border-style: solid;
+$field-color: #444;
+
+textarea, input, select {
+  font-size: $field-font-size;
+  background-color: $field-background-color;
+  border-color: $field-border-color;
+  border-width: $field-border-width;
+  border-style: $field-border-style;
+  color: $field-color;
+  display: block;
+  margin: 0px;
+  padding: 5px;
+  font-family: "DroidSans", sans-serif;
+  @include border-radius(4px);
+}
+
+textarea, input {
+  @include box-shadow(#ccc, 0, 0, 3px, false, true);
+  &:focus {
+    border-color: $field-focus-border-color;
+    @include box-shadow(fade-out($field-focus-border-color, .5), 0, 0, 2px, false, true);
+  }
+}
+
+form {
+  @include wrapper-style;
+  @include title;
+  margin-top: 0;
+
+  .field {
+    @include float-left;
+    margin: 0 5px;
+    position: relative;
+    &:first-child { margin-left: 0px; }
+    &:last-child { margin-right: 0px; }
+    .moneyformat {
+      font-weight: bold;
+      text-align: right;
+      width: 150px;
+    }
+  }
+
+  .fieldrow {
+    margin-top: 13px;
+    margin-bottom: 13px;
+    @include clearfix;
+    .field {
+      label { display: block; }
+      &.notes { width: 100%; margin-right: 0px; }
+      #notes { font-size: 16px; width: 98%; }
+    }
+    .button:first-child { margin-right: 0; @include float-right; }
+    &.first, &.last {
+      padding-top: 10px;
+      border-top: 1px solid #cbcdd5;
+      background: url("../img/double.png") repeat-x scroll left top transparent;
+    }
+    &.last { margin-bottom: 0; }
+  }
+}
+
+#search-bar {
+  .button-group:first-child { margin-left: 0; }
+  .button-group:last-child { margin-right: 0; }
+}
+
+#edit-invoice {
+  .field {
+    #customer { width: 674px; }
+    #type { width: 40px; }
+    #point_sale { width: 45px; }
+    #number { width: 83px; }
+    #point_sale, #number { text-align: right; }
+
+    &.point_sale { margin-right: 3px; }
+    &.number { margin-left: 0px; margin-right: 33px; }
+
+    label[for="issue_date"], label[for="expiration_date"] { text-align: center; }
+    label[for="point_sale"] { visibility: hidden; }
+  }
+}
+
+#edit-customer {
+  .field {
+    #name { width: 98%; font-size: 180%; }
+    &.name { width: 100%; margin-right: 0px; }
+    #address { width: 500px; }
+    #cuit { width: 140px; }
+    &.cuit { margin-right: 0px; }
+  }
+}
+
+#contact-edit {
+  .field {
+    #first_name, #last_name { width: 321px; }
+    #role { width: 190px; }
+    #phone { width: 170px; }
+    #mail {width: 260px; }
+  }
+}
+
+#payment, #invoice-payment, #customer-payment {
+  .field {
+    #receipt_number {
+      width: 160px;
+      text-align: right;
+    }
+
+    #customer { width: 674px; }
+
+    label[for="receipt_number"] { text-align: center; }
+    label[for="amount"] { text-align: right; }
+    &.amount { @include float-right; }
+  }
+}
+
+/* autocomplete popup */
+
+.autocomplete-results {
+  padding: 0;
+  background-color: white;
+  overflow: hidden;
+  z-index: 9999;
+  border: 1px solid $field-border-color;
+  @include border-radius(5px);
+  @include box-shadow(#666, 0, 0, 3px);
+
+  li {
+    padding: 7px 5px;
+    cursor: pointer;
+    /*display: block;*/
+    font-family: "Meta Web Pro", sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.06em;
+    font-weight: bold;
+    line-height: 16px;
+    overflow: hidden;
+    color: #555;
+    border-bottom: 1px solid #bfbfbf;
+    @include text-shadow(#bbb, 0, 0, 1px);
+    strong { color: #D94A8A; }
+    &:last-child { border-bottom: none; }
+
+    &.autocomplete-item-active { background-color: #e5e5e5; }
+
+    a {
+      @include float-right;
+      font-family: sans-serif;
+      font-weight: normal;
+      font-size: 14px;
+      @include text-shadow(none);
+      span {
+        font-weight: bold;
+        text-decoration: underline;
+      }
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}

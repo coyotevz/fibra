@@ -1,0 +1,60 @@
+
+{% macro render_field(field, last=False) -%}
+<div class="field {{ field.id }}">
+  {% if field.label %}{{ field.label }}{% endif %}
+  {% if field.errors %}
+  {%- set css_class = 'has_error ' + kwargs.pop('class', '') -%}
+  {{ field(class=css_class, **kwargs) }}
+  <ul class="field_error">{% for error in field.errors %}<li>{{ error|e }}</li>{% endfor %}</ul>
+  {%- else -%}
+  {{ field(**kwargs) }}
+  {%- endif %}
+  {%- if field.description %}<p class="fieldinfo">{{ field.description }}</p>{% endif %}
+</div>
+{%- endmacro %}
+
+
+{% macro static(filename) -%}
+{{ url_for('static', filename=filename) }}
+{%- endmacro %}
+
+
+{# Button functions #}
+
+{% macro form_button(label, type='submit', style=None, warn=None, onclick=None, primary=None, secondary=None) %}
+<button class="button{% if style %} {{ style }}{% endif %}{% if warn %} warn{% endif %}" type="{{ type }}"{% if onclick %} onclick="{{ onclick }}"{% endif %}{% for k,v in kwargs.items() %} {{ '%s="%s"'|format(k,v)|safe }}{% endfor %}>
+  <span class="button-content">
+    {% if primary %}<span class="button-primary-icon icon icon-{{ primary }}"></span>{% endif %}
+    {% if label %}<span class="button-text">{{ label }}</span>{% endif %}
+    {% if secondary %}<span class="button-secondary-icon icon-{{ secondary }}"></span>{% endif %}
+  </span>
+</button>
+{% endmacro %}
+
+{% macro form_button_group(buttons, style=None) %}
+{# buttons: list - dict(button arguments) #}
+<ul class="button-group">
+  {% for btn_args in buttons %}
+  <li{% if loop.first %} class="first"{% endif %}{% if loop.last %} class="last"{% endif %}>
+    {{ form_button(style=style, **btn_args) }}
+  </li>
+  {% endfor %}
+</ul>    
+{% endmacro %}
+
+{% macro button(label=None, url='#', style=None, warn=False, onclick=None, primary=None, secondary=None) -%}
+<a class="button{% if style %} {{ style }}{% endif %}{% if warn %} warn{% endif %}" href="{{ url }}" {% if onclick %} onclick="{{ onclick }}"{% endif %}{% for k,v in kwargs.items() %} {{ '%s="%s"'|format(k,v)|safe }}{% endfor %}><span class="button-content">{% if primary %}<span class="button-primary-icon icon icon-{{ primary }}"></span>{% endif %}{% if label %}<span class="button-text">{{ label }}</span>{% endif %}{% if secondary %}<span class="button-secondary-icon icon icon-{{ secondary }}"></span>{% endif %}</span></a>
+{%- endmacro %}
+
+{% macro button_group(buttons, style=None) %}
+{# buttons: list - dict(button arguments) #}
+<ul class="button-group">
+  {% for btn_args in buttons %}
+  <li{% if loop.first %} class="first"{% endif %}{% if loop.last %} class="last"{% endif %}>
+  {{ button(style=style, **btn_args) }}
+  </li>
+  {% endfor %}
+</ul>    
+{% endmacro %}
+{# vim:ft=xhtml.jinja:sw=2
+#}

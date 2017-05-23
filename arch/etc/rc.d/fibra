@@ -1,0 +1,75 @@
+#!/bin/bash
+
+daemon_name=fibra
+
+. /etc/rc.conf
+. /etc/rc.d/functions
+. /etc/conf.d/fibra
+
+GUNICORN=$(which gunicorn)
+FIBRA_LOGDIR=$(dirname $FIBRA_ACCESS_LOGFILE)
+PIDFILE=/var/run/$daemon_name.pid
+
+case "$1" in
+    start)
+        stat_busy "Starting Fibra http server"
+        [ ! -d $FIBRA_LOGDIR ] && install -d -m 775 $FIBRA_LOGDIR
+
+        if [ -f $PIDFILE ]; then
+            stat_fail
+            exit 1
+        else
+            $GUNICORN --pid=$PIDFILE\
+                      --access-logfile=$FIBRA_ACCESS_LOGFILE\
+                      --error-logfile=$FIBRA_ERROR_LOGFILE\
+                      --name=$daemon_name\
+                      --bind=$FIBRA_BIND\
+                      --workers=$FIBRA_WORKERS\
+                      "fibra:app" >/dev/null
+            if [ $? -gt 0 ]; then
+                stat_fail
+                exit 1
+            else
+                add_daemon $daemon_name
+                stat_done
+            fi
+        fi
+        ;;
+
+    stop)
+        stat_busy "Stopping Fibra http server"
+        if [ ! -f $PIDFILE ]; then
+            stat_fail
+            exit 1
+        else
+            PID=$(cat $PIDFILE)
+            kill $PID &> /dev/null
+
+            if [ $? -gt 0 ]; then
+                stat_fail
+                exit 1
+            else
+                for i in $(seq 10); do
+                    [ ! -a $PIDFILE ] && break
+                    sleep 1
+                done
+                rm_daemon $daemon_name
+                stat_done
+            fi
+        fi
+        ;;
+
+    restart)
+        $0 stop
+        sleep 1
+        $0 start
+        ;;
+
+    status)
+        stat_busy "Checking Fibra http server status"
+        ck_status $daemon_name
+        ;;
+
+    *)
+        echo "Usage: $0 {start|stop|restart|status}"
+esac

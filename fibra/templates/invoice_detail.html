@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% from "macros.html" import button %}
+
+{% block main %}
+<div class="info-wrapper clearfix">
+  <div class="titlerow">
+    <h2>Documento <span>{{ invoice.fulldesc }}</span></h2>
+    {{ button('Editar', url_for('customer_edit_invoice', customer_id=invoice.customer.id, invoice_id=invoice.id), style="small") }}
+  </div>
+  <div class="subtitlerow">
+    <p class="customer-name">Cliente: <a href="{{ url_for('customer_detail', customer_id=invoice.customer.id) }}">{{ invoice.customer.name }}</a></p>
+    <span class="date"><strong>Emisión:</strong> {{ invoice.issue_date|dateformat }}</span>
+    <span class="date"><strong>Vencimiento:</strong> {{ invoice.issue_date|dateformat }}</span>
+    <div id="invoice-total"><strong>Total:</strong> <span class="total">{{ invoice.total|moneyfmt(curr='$ ') }}</span></div>
+    {% if invoice.notes %}
+    <div class="notes">
+      <p>{{ invoice.notes }}</p>
+    </div>
+    {% endif %}
+  </div>
+  <div class="inforow">
+    <span class="label">Pagos:</span>
+    <table class="list-browser" cellspacing="0" cellpadding="0">
+      {% for invoice_payment in invoice.invoice_payments %}
+      <tr>
+        <td class="date">{{ invoice_payment.payment.date|dateformat }}</td>
+        <td class="receipt_no">{{ invoice_payment.payment.receipt_number|d('', true) }}</td>
+        <td class="balance">
+          <span>{{ invoice_payment.amount|moneyfmt(curr='$ ') }}</span>
+        </td>
+        <td class="notes">{{ invoice_payment.payment.notes }}</td>
+      </tr>
+      {% else %}
+      <tr><td class="void-list"><em>Esta factura no registra pagos.</em></td></tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div class="inforow last">
+    {% if invoice.state in ('PENDING', 'EXPIRED') %}
+      <div class="state {{ invoice.state.lower() }}">
+        <span class="label">Pendiente:</span>
+        <span>{{ invoice.balance|moneyfmt(curr='$ ') }}</span>
+      </div>
+      {{ button('Agregar Pago', url_for('invoice_add_payment', invoice_id=invoice.id)) }}
+    {% else %}
+    <div class="state {{ invoice.state.lower() }}">
+      <span>Documento cancelado</span>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+{# vim:ft=xhtml.jinja:sw=2
+#}

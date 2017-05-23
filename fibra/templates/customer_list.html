@@ -1,0 +1,115 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<h2>Customers</h2>
+
+<div id="search-bar" class="clearfix">
+  <div class="search-wrapper">
+    <input id="customer-search" class="autocomplete-input" type="text" name="q" placeholder="Buscar ..."/>
+  </div>
+  {{ button_group([
+  dict(label='Asentar Pago', url=url_for('payment_new')),
+  dict(label='Nuevo Documento', url=url_for('invoice_new')),
+  ]) }}
+</div>
+
+<div id="main-list">
+  <div class="list-wrapper clearfix">
+    <table class="list-browser" cellspacing="0" cellpadding="0">
+      {% for customer in customers %}
+      <tr class="{{ customer.state.lower() }}">
+
+        <td class="name">
+          <a href="{{ url_for('customer_detail', customer_id=customer.id) }}">{{ customer.name }}</a>
+          <span class="quiet">({{ customer.count_invoices() }} documentos)</span>
+        </td>
+
+        <td class="timeago">{{ customer.next_expiration|timeago }}</td>
+
+        <td class="balance">
+          <a href="{{ url_for('customer_detail', customer_id=customer.id) }}"><span>{{ customer.balance|moneyfmt(curr='$ ') }}</span></a>
+        </td>
+
+      </tr>
+      {% else %}
+      <tr><td class="void-list"><em>No hay facturas por cobrar.</em></td></tr>
+      {% endfor %}
+    </table>
+    {% if customers.count() > 0 %}
+    <div class="inforow last">
+      {{ button('Imprimir Informe', url_for('customers_report')) }}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock main %}
+
+{% block js %}
+<script type="text/javascript" charset="utf-8">
+
+var title = function(text) {
+  return $.map(text.split(" "), function(x) { if (x) return x[0].toUpperCase() + x.slice(1); }).join(" ");
+}
+
+var item_data = {
+    data: {value: '', url: false, create_url: '{{ url_for("customer_edit") }}'},
+    value: '',
+    result: ''
+};
+
+var on_fill_list = function(list, term, data) {
+  var li = $('<li><a>crear cliente <span>'+title(term)+'</span> »</a></li>')
+           .appendTo(list)[0];
+  d = $.extend(item_data.data, {term: term})
+  $.data(li, "autocomplete.data", $.extend(item_data, {data: d}));
+}
+
+var parseClient = function (data) {
+  return $.map(eval(data), function(row) {
+      return {
+        data: row,
+        value: row.value,
+        result: row.value
+      }
+  }).concat(item_data);
+};
+
+var formatItem = function(data, i, max, value) {
+  if (data.url === false)
+    return data.url;
+  return value;
+}
+
+$(function() {
+    var url = $SCRIPT_ROOT + "{{ url_for('ajax_search_customers') }}";
+    $('#customer-search').autocomplete(url, {
+        parse: parseClient,
+        formatItem: formatItem,
+        width: 674,
+        scrollHeight: 400,
+        dealy: 200,
+        selectFirst: false,
+        onFillList: on_fill_list,
+        onShow: function (select) { $('.list-wrapper').css({'opacity': 0.3}); },
+        onHide: function (select) { $('.list-wrapper').css({'opacity': 1}); },
+    })
+    .result(function(evt, data, formatted) {
+        var url;
+        console.log("on result:", data);
+        if (data.url === false) {
+          $.cookie("customer_name", title(data.term), {path: "/"});
+          url = $SCRIPT_ROOT + data.create_url;
+        } else {
+          url = $SCRIPT_ROOT + data.url;
+        }
+        window.location.href = url;
+    });
+
+    $('#customer-search').outerWidth(
+        $('#search-bar').width()-$('#search-bar .button-group').outerWidth(true)-5
+    );
+});
+</script>
+{% endblock %}
+{# vim:ft=xhtml.jinja:sw=2
+#}

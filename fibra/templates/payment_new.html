@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% from "macros.html" import render_field, form_button %}
+
+{% block main %}
+<form id="payment" method="post" action=".">
+  <h2>Agregar pago</h2>
+
+  {{ form.hidden_tag() }}
+  <div class="fieldrow first">
+    {{ render_field(form.customer) }}
+  </div>
+  <div id="invoices-fragment"></div>
+  <div class="fieldrow">
+    {{ render_field(form.date, required="required", autofocus="autofocus", class="datepicker") }}
+    {{ render_field(form.receipt_number, autocomplete="off") }}
+    {{ render_field(form.amount, required="required", autocomplete="off", class="moneyformat calc") }}
+  </div>
+  <div class="fieldrow">
+    {{ render_field(form.notes) }}
+  </div>
+  <div class="fieldrow last">
+    {{ form_button('Guardar') }}
+  </div>
+</form>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function () {
+    $('#customer').select_autocomplete({
+      width: $('#customer').width(),
+    }).select(function () {
+      var url = $SCRIPT_ROOT + "/customers/" + $(this).attr('value') + "/pay/";
+      $('#invoices-fragment').load(url + " div#invoices-fragment");
+    });
+  });
+</script>
+{% endblock %}
+{# vim:ft=xhtml.jinja:sw=2
+#}

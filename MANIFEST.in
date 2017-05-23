@@ -1,0 +1,6 @@
+recursive-include fibra/templates *
+recursive-include fibra/static *
+recursive-include arch *
+prune fibra/static/.webassets-cache
+recursive-exclude fibra/static/assets *
+global-exclude .*.swp

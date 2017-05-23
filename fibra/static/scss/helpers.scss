@@ -1,0 +1,214 @@
+$shade-background: #f1f5fa;
+
+@mixin vtop {
+  vertical-align: top;
+}
+
+@mixin vmid {
+  vertical-align: middle;
+}
+
+@mixin vbot {
+  vertical-align: bottom;
+}
+
+@mixin shade {
+  background-color: $shade-background;
+}
+
+@mixin float($side: left) {
+  display: inline;
+  float: unquote($side);
+}
+
+@mixin float-left {
+  @include float(left);
+}
+
+@mixin float-right {
+  @include float(right);
+}
+
+@mixin reset-float($display: block) {
+  float: none;
+  display: $display;
+}
+
+@mixin clearfix {
+  &:before, &:after {
+    content: "\0020";
+    display: block;
+    overflow: hidden;
+    width: 0;
+    height: 0;
+  }
+  &:after {
+    clear: both;
+  }
+  & { zoom: 1; }
+}
+
+
+$default-border-radius: 5px !default;
+
+// Round all corners by a specific amount, defaults to the value of "$default-border-radius"
+@mixin border-radius($radius: $default-border-radius, $vertical-radius: false) {
+  @if $vertical-radius {
+    -webkit-border-radius: nth($radius, 1) nth($vertical-radius, 1);
+    -moz-border-radius: $radius unquote("/") $vertical-radius;
+    -o-border-radius: $radius unquote("/") $vertical-radius;
+    -ms-border-radius: $radius unquote("/") $vertical-radius;
+    -khtml-border-radius: $radius unquote("/") $vertical-radius;
+    border-radius: $radius unquote("/") $vertical-radius;
+  }
+  @else {
+    -moz-border-radius: $radius;
+    -webkit-border-radius: $radius;
+    -o-border-radius: $radius;
+    -ms-border-radius: $radius;
+    -khtml-border-radius: $radius;
+    border-radius: $radius;
+  }
+}
+
+// Round radius at position by amount.
+// * legal values for "$vert": "top", "bottom"
+// * legal values for "$horiz": "left", "right"
+@mixin border-corner-radius($vert, $horiz, $radius: $default-border-radius) {
+  -moz-radius-#{$vert}#{$horiz}: $radius;
+  -webkit-border-#{$vert}-#{$horiz}-radius: $radius;
+  -o-border-#{$vert}-#{$horiz}-radius: $radius;
+  -ms-border-#{$vert}-#{$horiz}-radius: $radius;
+  -khtml-border-#{$vert}-#{$horiz}-radius: $radius;
+  border-#{$vert}-#{$horiz}-radius: $radius;
+}
+
+// Round both top corners by amount
+@mixin border-top-radius($radius: $default-border-radius) {
+  @include border-corner-radius(top, left, $radius);
+  @include border-corner-radius(top, right, $radius);
+}
+
+// Round both right corners by amount
+@mixin border-right-radius($radius: $default-border-radius) {
+  @include border-corner-radius(top, right, $radius);
+  @include border-corner-radius(bottom, right, $radius);
+}
+
+// Round both bottom corners by amount
+@mixin border-bottom-radius($radius: $default-border-radius) {
+  @include border-corner-radius(bottom, right, $radius);
+  @include border-corner-radius(bottom, left, $radius);
+}
+
+// Round both left corners by amount
+@mixin border-left-radius($radius: $default-border-radius) {
+  @include border-corner-radius(top, left, $radius);
+  @include border-corner-radius(bottom, left, $radius);
+}
+
+
+$default-box-shadow-color: #333 !default;
+$default-box-shadow-h-offset: 0px !default;
+$default-box-shadow-v-offset: 0px !default;
+$default-box-shadow-blur: 5px !default;
+$default-box-shadow-spread: false !default;
+$default-box-shadow-inset: false !default;
+
+// Provides a single cross-browser CSS box shadow for WebKit, Gecko and CSS3
+@mixin box-shadow(
+  $color: $default-box-shadow-color,
+  $hoff: $default-box-shadow-h-offset,
+  $voff: $default-box-shadow-v-offset,
+  $blur: $default-box-shadow-blur,
+  $spread: $default-box-shadow-spread,
+  $inset: $default-box-shadow-inset
+) {
+  @if not ($inset == true or $inset == false or $inset == inset) {
+    @warn "$inset expected to be true or the inset keyword. Got #{$inset} instead. Using: inset";
+  }
+
+  @if $color == none { 
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    -o-box-shadow: none;
+    box-shadow: none;
+  }
+  @else {
+    $full: $hoff $voff;
+    @if $blur { $full: $full $blur; }
+    @if $spread { $full: $full $spread; }
+    @if $color { $full: $full $color; }
+    @if $inset { $full: inset $full; }
+    -moz-box-shadow: $full;
+    -webkit-box-shadow: $full;
+    -o-box-shadow: $full;
+    box-shadow: $full;
+  }
+}
+
+
+
+$default-text-shadow-color:    #aaa !default;
+$default-text-shadow-h-offset: 0px  !default;
+$default-text-shadow-v-offset: 0px  !default;
+$default-text-shadow-blur:     1px  !default;
+
+// Provides a single cross-browser CSS text shadow.
+// Includes default arguments for color, horizontal offset, vertical offset and blur
+@mixin text-shadow(
+  $color: $default-text-shadow-color,
+  $hoff: $default-text-shadow-h-offset,
+  $voff: $default-text-shadow-v-offset,
+  $blur: $default-text-shadow-blur
+) {
+  @if $color == none {
+    text-shadow: none;
+  } @else {
+    text-shadow: $color $hoff $voff $blur;
+  }
+}
+
+/* icon helpers */
+
+@mixin icon {
+  background: url("../img/icons_sprite.png") no-repeat scroll left top transparent;
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+  text-indent: -99999px;
+}
+
+@mixin icon-sprite($y: 0) {
+  background-position: left -#{$y};
+  a:hover &, .button:hover &, &:hover { background-position: right -#{$y}; }
+}
+
+
+/* commons style mixins */
+
+$wrapper-color: rgba(0, 0, 0, 0.1);
+
+@mixin overlay-style {
+  @include border-radius(5px);
+  @include box-shadow(#86abd9, 0, 0, 2px, 1px);
+}
+
+@mixin wrapper-style {
+  background-color: $wrapper-color;
+  padding: 8px;
+  margin-top: 10px;
+  @include overlay-style;
+}
+
+@mixin title {
+  h2 {
+    color: #333;
+    font-family: "Meta Web Pro", sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    letter-spacing: 0.06em;
+    @include text-shadow(#bbb, 1px, 1px, 0);
+    a, span { color: #d94a8a;  /*#fe57a1; /*#fb292d;*/ }
+  }
+}

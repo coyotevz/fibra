@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% from "macros.html" import render_field %}
+
+{% block main %}
+<form id="contact-edit" method="post" action=".">
+  <h2>{% if form.id.data %}Editar{% else %}Nuevo{% endif %} Contacto para <a href="{{ url_for('customer_detail', customer_id=customer.id) }}">{{ customer.name }}</a></h2>
+
+  {{ form.hidden_tag() }}
+  <div class="fieldrow first">
+    {{ render_field(form.first_name, autofocus="autofocus") }}
+    {{ render_field(form.last_name) }}
+  </div>
+  <div class="fieldrow">
+    {{ render_field(form.role) }}
+    {{ render_field(form.phone) }}
+    {{ render_field(form.mail) }}
+  </div>
+  <div class="fieldrow">
+    {{ render_field(form.notes) }}
+  </div>
+  <div class="fieldrow last">
+    {{ form_button('Guardar') }}
+  </div>
+</form>
+{% endblock %}
+{# vim:ft=xhtml.jinja:sw=2
+#}

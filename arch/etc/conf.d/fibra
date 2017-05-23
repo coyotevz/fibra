@@ -1,0 +1,8 @@
+#
+# Parameters to be passed to gunicorn
+#
+
+FIBRA_BIND="$(hostname):18018"
+FIBRA_ACCESS_LOGFILE="/var/log/fibra/access.log"
+FIBRA_ERROR_LOGFILE="/var/log/fibra/error.log"
+FIBRA_WORKERS=$(( ( $(grep -c ^processor /proc/cpuinfo) * 2) + 1 ))

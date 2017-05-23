@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block header %}
+{% if request.url_rule.endpoint != 'customer_list' %}
+  <a class="icon icon-home" href="{{ url_for('customer_list') }}">Inicio</a>
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+{% for category, msg in get_flashed_messages(with_categories=True) %}
+<p class="flash {{ category }}">{{ msg }}</p>
+{% endfor %}
+<div id="copy">
+  <p>Copyright &copy; 2011 <a title="RoccTech" href="http://www.rocctech.com.ar/">RoccTech</a>. Todos los derechos reservados.</p>
+</div>
+{% endblock %}
+{# vim:ft=xhtml.jinja:sw=2
+#}

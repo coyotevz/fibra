@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% from "macros.html" import render_field %}
+
+{% block main %}
+<div class="clearfix">
+  <form id="edit-customer" method="post" action=".">
+    <h2>{% if form.id.data %}Editar{% else %}Nuevo{% endif %} Cliente</h2>
+
+    {{ form.hidden_tag() }}
+    <div class="fieldrow first">
+      {{ render_field(form.name, required="required", autofocus="autofocus") }}
+    </div>
+    <div class="fieldrow">
+      {{ render_field(form.address) }}
+      {{ render_field(form.cuit) }}
+    </div>
+    <div class="fieldrow">
+      {{ render_field(form.notes) }}
+    </div>
+    <div class="fieldrow last">
+      {{ form_button('Guardar') }}
+    </div>
+  </form>
+</div>
+{% endblock %}
+{# vim:ft=xhtml.jinja:sw=2
+#}

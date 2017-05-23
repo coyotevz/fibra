@@ -1,0 +1,125 @@
+@import "helpers";
+
+$link-color: #4183c4;
+
+body {
+  font: 14px "DroidSans",Arial,sans-serif;
+  line-height: 20px;
+}
+
+.mono {
+  font: 18px "InconsolataMedium", monospace;
+}
+
+a {
+  color: $link-color;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+#container {
+  width: 692px;
+  margin: auto;
+  header {
+    height: 35px;
+    a {
+      margin: 9px 5px 10px;
+      margin-right: 5px;
+    }
+  }
+  #main > h2 { display: none; }
+}
+
+.vtop { @include vtop; }
+.vmid { @include vmid; }
+.vbot { @include vbot; }
+.shade { @include shade; }
+
+.clearfix { @include clearfix; }
+
+.tooltip {
+  display: none;
+  padding: 5px;
+  min-width: 200px;
+  @include border-radius(5px);
+  @include box-shadow(#666, 0, 0, 3px);
+  background-color: #fff;
+  overflow: hidden;
+
+  h4 {
+    @include clearfix;
+    span.name { @include float-left; }
+    span.role {
+      @include float-right;
+      font-size: 12px;
+      font-weight: normal;
+      font-style: italic;
+      color: #666;
+      margin-left: 5px;
+      overflow: hidden;
+    }
+  }
+
+  p.notes {
+    color: #666;
+    line-height: 15px;
+    font-size: 13px;
+    font-style: italic;
+    border-top: 1px solid #ccc;
+    margin-bottom: 5px;
+    padding-top: 5px;
+    max-width: 400px;
+  }
+
+  .buttons-row {
+    padding-top: 5px;
+    border-top: 1px solid #ccc;
+    @include clearfix;
+    .button { margin: 0; }
+
+    .tooltip-contact-phone,
+    .tooltip-contact-mail {
+      @include float-left;
+      margin-left: 3px;
+      margin-right: 8px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .contact-edit { @include float-right; }
+
+  }
+}
+
+p.flash { display: none; }
+
+.jquery-message {
+  font-size: 20px;
+  text-align: center;
+  background-color: #424542;
+  color: white;
+  position: fixed;
+  bottom: 50px;
+  width: 50%;
+  left: 25%;
+  display: none;
+  opacity: 0;
+  z-index: 100000;
+  border: 3px solid white;
+  @include border-radius(5px);
+  @include box-shadow(#666, 0, 0, 3px);
+  @include text-shadow(#666, 0, 0, 1px);
+  p {
+    padding: 15px;
+  }
+}
+
+footer #copy {
+  font-size: 12px;
+  color: lighten(rgb(128, 128, 128), 20);
+  text-align: center;
+  margin-top: 3px;
+  a { color: lighten($link-color, 20); }
+}

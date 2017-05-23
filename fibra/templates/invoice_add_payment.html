@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% from "macros.html" import render_field, form_button %}
+
+{% block main %}
+<form id="invoice-payment" method="post" action=".">
+  <h2>Agregar pago de <a href="{{ url_for('customer_detail', customer_id=invoice.customer.id) }}">{{ invoice.customer.name }}</a></h2>
+
+  {{ form.hidden_tag() }}
+  <div class="fieldrow first">
+    <div id="invoices-fragment">
+      <table class="list-browser" cellspacing="0" cellpadding="0">
+        <tr class="{{ invoice.state.lower() }}">
+          <td class="name">
+            <a href="{{ url_for('invoice_detail', invoice_id=invoice.id) }}">{{ invoice.fulldesc }}</a>
+          </td>
+          <td class="date">{{ invoice.issue_date|dateformat }}</td>
+          <td class="date">{{ invoice.expiration_date|dateformat }}</td>
+          <td class="total">{{ invoice.total|moneyfmt(curr='$ ') }}</td>
+          <td class="balance">
+            <span>{{ invoice.balance|moneyfmt(curr='$ ') }}</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="fieldrow">
+    {{ render_field(form.date, required="required", autofocus="autofocus", class="datepicker") }}
+    {{ render_field(form.receipt_number, autocomplete="off") }}
+    {{ render_field(form.amount, required="required", autocomplete="off", class="moneyformat") }}
+  </div>
+  <div class="fieldrow">
+    {{ render_field(form.notes) }}
+  </div>
+  <div class="fieldrow last">
+    {{ form_button('Guardar') }}
+  </div>
+</form>
+{% endblock %}
+{# vim:ft=xhtml.jinja:sw=2
+#}

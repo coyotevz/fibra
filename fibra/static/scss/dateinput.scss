@@ -1,0 +1,112 @@
+/* date input calendar style */
+@import "helpers";
+
+.datepicker {
+  padding-right: 25px;
+  width: 173px;
+  text-align: center;
+  @include float-left;
+}
+
+.ui-datepicker-trigger {
+  cursor: pointer;
+  float: left;
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  text-indent: -9999px;
+  @include icon;
+  @include icon-sprite(96px);
+}
+
+/* datepicker-ui style */
+.ui-datepicker {
+  width: 198px;
+  padding: 2px;
+  background-color: #fff;
+  font-size: 11px;
+  border: 1px solid #ccc;
+  display: none;
+
+  @include overlay-style;
+
+  .ui-datepicker-header {
+    padding: 2px 0;
+    height: 22px;
+    .ui-datepicker-title {
+      font-size: 14px;
+      color: #0150d1;
+      float: left;
+      text-align: center;
+      line-height: 16px;
+      width: 160px;
+      @include text-shadow(#ddd, 0, 1px, 0);
+    }
+    .ui-datepicker-prev, .ui-datepicker-next {
+      display: block;
+      width: 16px;
+      height: 16px;
+      float: left;
+      margin-left: 3px;
+      cursor: pointer;
+      text-indent: -9999px;
+    }
+    .ui-datepicker-next {
+      float: right;
+      margin-left: 0;
+      margin-right: 3px;
+    }
+  }
+
+  table.ui-datepicker-calendar {
+    margin: 2px;
+    .ui-datepicker-week-end {
+      background-color: #e0ecff;//#ffe5e5;
+    }
+    thead {
+      height: 14px;
+      border-bottom: 1px solid #ddd;
+      th {
+        font-weight: normal;
+        width: 28px;
+        text-align: center;
+      }
+    }
+    tbody {
+      background-color: #fff;
+      margin-top: 4px;
+      td {
+        height: 22px;
+        a {
+          display: block;
+          float: left;
+          width: 27px;
+          height: 20px;
+          text-decoration: none;
+          font-size: 11px;
+          text-align: center;
+          line-height: 20px;
+          color: #666;
+          @include border-radius(3px);
+
+          &:hover, &:focus { background-color: #ddd; }
+        }
+        &.ui-datepicker-days-cell-over a { background-color: #ddd }
+        &.ui-datepicker-current-day a {
+          background-color: #498ce2;
+          color: #fff;
+          @include text-shadow(#333, 0, 0, 1px);
+        }
+        &.ui-datepicker-today a {
+          background-color: #333;
+          color: #fff;
+          @include text-shadow(none);
+        }
+        &.ui-datepicker-other-month a { color: #ccc; }
+      }
+    }
+  }
+}

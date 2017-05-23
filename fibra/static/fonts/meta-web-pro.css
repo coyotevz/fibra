@@ -1,0 +1,17 @@
+/*
+ * Fonts definitions
+ */
+
+@font-face {
+  font-family: "Meta Web Pro";
+  src: url('../fonts/meta-web-pro-normal.woff') format('woff');
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Meta Web Pro";
+  src: url('../fonts/meta-web-pro-bold.woff') format('woff');
+  font-style: normal;
+  font-weight: 700;
+}

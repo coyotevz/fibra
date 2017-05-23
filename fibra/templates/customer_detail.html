@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+
+{% macro contact_detail(contact) %}
+<span class="contact-name">{{ contact.name }}</span>
+<div class="tooltip contact-tooltip">
+  <h4><span class="name">{{ contact.name }}</span>{% if contact.role %}<span class="role">{{ contact.role }}</span>{% endif %}</h4>
+  {%- if contact.notes %}<p class="notes">{{ contact.notes|replace('\n', '<br/>')|safe }}</p>{% endif -%}
+  <div class="buttons-row">
+    {%- if contact.phone -%}
+    {{ button(primary='phone', url='phoneto:'+contact.phone, style='small') }}<span class="tooltip-contact-phone">{{ contact.phone }}</span>
+    {%- endif -%}
+    {%- if contact.mail -%}
+    {{ button(primary='mail', url='mailto:'+contact.mail, style='small') }}<span class="tooltip-contact-mail">{{ contact.mail }}</span>
+    {%- endif -%}
+    <div class="contact-edit">
+      {{ button(primary='contact-edit', url=url_for('contact_edit', contact_id=contact.id), style="small") }}
+    </div>
+  </div>
+</div>
+{% if contact.role %}<span class="contact-role">{{ contact.role }}</span>{% endif %}
+{% if contact.phone %}<span class="contact-phone">({{ contact.phone }})</span>{% endif %}
+{% if contact.mail %}<span class="contact-mail">&lt;{{ contact.mail }}&gt;</span>{% endif %}
+{% endmacro %}
+
+{% block main %}
+<div class="info-wrapper clearfix">
+  <div class="titlerow">
+    <h2>{{ customer.name }}</h2>
+    {{ button('Editar', url_for('customer_edit', customer_id=customer.id), style="small") }}
+    {% if invoices.count() > 0 %}{{ button('Imprimir', url_for('customer_report', customer_id=customer.id), style="small") }}{% endif %}
+  </div>
+  <div class="subtitlerow">
+    <div class="clearfix">
+      <span class="address">{{ customer.address }}</span>
+      <span class="cuit">{{ customer.cuit }}</span>
+    </div>
+    {% if customer.notes %}
+    <div class="notes">
+      <p>{{ customer.notes }}</p>
+    </div>
+    {% endif %}
+  </div>
+  <div class="inforow">
+    <a id="contact-toggle"><span>Contactos</span> ({{ customer.contacts.count() }})</a>
+  </div>
+  <div id="contacts" class="inforow">
+    {{ button('Nuevo Contacto', url_for('contact_edit', customer_id=customer.id), style="small", id='new-contact') }}
+    {%- for contact in customer.contacts %}
+    <div class="contact{% if loop.first %} first{% endif %}">
+      {{ contact_detail(contact) }}
+    </div>
+    {%- else %}
+    <div class="nocontacts">
+      <em>Este cliente no tiene ningún contacto asociado.</em>
+    </div>
+    {%- endfor %}
+  </div>
+  <div class="inforow last">
+    {{ button('Agregar Documento', url_for('customer_edit_invoice', customer_id=customer.id)) }}
+    {% if customer.state in ('PENDING', 'EXPIRED') %}
+    {{ button('Agregar Pago', url_for('customer_add_payment', customer_id=customer.id)) }}
+    {% endif %}
+  </div>
+</div>
+
+<div class="list-wrapper">
+  <table class="list-browser" cellspacing="0" cellpadding="0">
+    {% for invoice in invoices %}
+    <tr class="{{ invoice.state.lower() }}">
+      <td class="name">
+        <a href="{{ url_for('invoice_detail', invoice_id=invoice.id) }}">{{ invoice.fulldesc }}</a>
+      </td>
+      <td class="date">{{ invoice.issue_date|dateformat }}</td>
+      <td class="date">{{ invoice.expiration_date|dateformat }}</td>
+      <td class="total">{{ invoice.total|moneyfmt(curr='$ ') }}</td>
+      <td class="balance">
+        <span>{{ invoice.balance|moneyfmt(curr='$ ') }}</span>
+      </td>
+      {% if invoice.state in ('PENDING', 'EXPIRED') %}
+      <td class="action">
+        {{ button('Pagar', url_for('invoice_add_payment', invoice_id=invoice.id), style='small') }}
+      </td>
+      {% else %}
+      <td class="date"><em>{{ invoice.cancelled_date|dateformat('%d/%m/%Y') }}</em></td>
+      {% endif %}
+    </tr>
+    {% else %}
+    <tr><td class="void-list"><em>No hay facturas asociadas.</em></td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+      $('#contact-toggle').click(function() {
+        $(this).toggleClass('open');
+        $('div#contacts').slideToggle('fast');
+        });
+      $('.contact-name').tooltip({position: "center right",effect:"slide", offset: [10, 10]});
+      });
+</script>
+{% endblock %}
+{# vim:ft=xhtml.jinja:sw=2
+#}

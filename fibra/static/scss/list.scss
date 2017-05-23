@@ -1,0 +1,204 @@
+@import "helpers";
+
+$wrapper-color: rgba(0, 0, 0, 0.1);
+
+#search-bar {
+  @include wrapper-style;
+  margin-top: 0;
+
+  .search-wrapper {
+    @include float-left;
+    margin-right: 5px;
+    #customer-search {
+      width: 384px;
+      font-size: 17px;
+    }
+  }
+}
+
+.info-wrapper {
+  @include wrapper-style;
+  @include title;
+  margin-top: 0px;
+
+  .titlerow {
+    @include clearfix;
+
+    h2 { display: inline; }
+    .button { @include float-right; margin-right: 0; }
+  }
+
+  .subtitlerow {
+    @include clearfix;
+    margin-top: 5px;
+    .customer-name { font-weight: bold; }
+    .address { font-style: italic; color: #555; @include float-left;}
+    .cuit { font-weight: bold; @include float-right; }
+    .notes {
+      background-color: #e8eff0;
+      border-color: #ccc;
+      border-width: 1px;
+      border-style: solid;
+      font-size: 13px;
+      font-style: italic;
+      padding: 5px 8px;
+      @include border-radius(4px);
+      margin: 5px 0px;
+      @include box-shadow(#ccc, 0, 0, 3px, false, true);
+    }
+    #invoice-total {
+      @include float-right;
+      .total {
+        font-family: "Meta Web Pro";
+        color: #666;
+        font-weight: bold;
+        font-size: 18px;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  #contacts {
+    margin-top: 5px;
+    display: none;
+    border-top: 1px solid #cbcdd5;
+    background: url("../img/double.png") repeat-x scroll left top transparent;
+    #new-contact, .nocontacts { margin-top: 8px; margin-bottom: 3px; }
+    .nocontacts { margin-left: 20px; }
+    .contact {
+      padding-left: 20px;
+      margin-bottom: 3px;
+      clear: left;
+      @include float-left;
+      &.first { margin-top: 5px; }
+      .contact-name, .contact-role, .contact-phone, .contact-email { margin: 0 3px; }
+      .contact-name { font-weight: bold; cursor: pointer; }
+      .contact-phone { color: #888; }
+    }
+  }
+  .inforow {
+    margin-bottom: 5px;
+    @include clearfix;
+
+    #new-contact { margin-right: 0; @include float-right; }
+    #contact-toggle {
+      cursor: pointer;
+      color: #333;
+      padding-left: 12px;
+      background: url("../img/arrow-closed.png") no-repeat left center transparent;
+      span { font-weight: bold; }
+      &.open { background-image: url("../img/arrow-open.png"); }
+      &:hover { text-decoration: none; }
+    }
+    .state {
+      @include float-left;
+      height: 20px;
+      font-family: "Meta Web Pro", sans-serif;
+      font-size: 18px;
+      line-height: 20px;
+      font-weight: bold;
+      color: #fff;
+      padding: 5px 10px 7px;
+      @include text-shadow(rgba(0, 0, 0, 0.5), 0, 1px, 1px);
+      @include border-radius(3px);
+      @include box-shadow(#465158, 0, 1px, 1px);
+      background-color: #b4db8c;
+      &.pending {
+        background-color: #8DB1C9;
+      }
+      &.expired {
+        background-color: #C98D8D;
+      }
+      .label { font-size: 16px; }
+    }
+  }
+}
+
+.inforow {
+  &.last { margin-bottom: 0; }
+  &.first, &.last {
+    padding-top: 10px;
+    border-top: 1px solid #cbcdd5;
+    background: url("../img/double.png") repeat-x scroll left top transparent;
+    .button {
+      @include float-right;
+      margin-right: 0;
+    }
+  }
+}
+
+.list-wrapper .inforow {
+  &.last { border-top: none; }
+}
+
+
+#main-list .list-wrapper tr.paid { display: none; }
+
+.list-wrapper {
+  @include wrapper-style;
+}
+
+table.list-browser {
+  width: 100%;
+  font-size: 15px;
+  font-family: "Meta Web Pro";
+  border-color: #bfbfbf;
+  border-style: solid;
+  border-width: 1px;
+  tr {
+    background-color: #fff;
+    border-bottom: 1px solid #bfbfbf;
+    td {
+      vertical-align: middle;
+      padding: 10px 5px;
+      &.name {
+        max-width: 360px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #444;
+        &:hover { color: #666; }
+        a {
+          color: #444;
+          text-decoration: none;
+          &:hover {
+            color: #666;
+          }
+        }
+        .quiet { color: #999; font-weight: normal; font-size: 14px; }
+      }
+      &.timeago { max-width: 150px; }
+      &.total {
+        text-align: right;
+        font-weight: bold;
+        font-size: 15px;
+        color: #888;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+      }
+      &.balance {
+        text-align: right;
+        span {
+          background-color: #8db1c9;
+          padding: 6px 10px 4px;
+          font-weight: bold;
+          color: #fff;
+          @include border-radius(3px);
+          @include box-shadow(#465158, 0, 1px, 1px);
+          height: 20px;
+          line-height: 17px;
+          text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+        }
+        a:hover { text-decoration: none; }
+      }
+      &.action .button { float: right; position: relative; }
+      &.void-list { color: #666; font-weight: bold; text-align: center; }
+    }
+    &.paid {
+      td.name span.quiet { visibility: hidden; }
+      td.balance span { visibility: hidden; }
+      td.date em { color: #8cc4ff; letter-spacing: -0.05em;}
+    }
+    &.expired td.balance span {
+      background-color: #c98d8d;
+    }
+  }
+}
