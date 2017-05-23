@@ -3,7 +3,7 @@
 import locale
 import decimal
 
-from flask.ext.wtf import (
+from flask_wtf import (
         Form, TextField, TextAreaField, IntegerField, DecimalField, DateField,
         HiddenField, SubmitField, Required, Optional, Length, NumberRange
 )

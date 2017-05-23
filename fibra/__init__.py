@@ -7,7 +7,7 @@ import locale
 locale.setlocale(locale.LC_ALL, '')
 
 from flask import Flask
-from flask.ext.assets import Environment, Bundle
+from flask_assets import Environment, Bundle
 
 from fibra.models import db
 import fibra.scssfilter # webasset filter

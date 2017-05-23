@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from flask.ext.script import Manager
+from flask_script import Manager
 from fibra import app
 
 manager = Manager(app)
