@@ -4,3 +4,4 @@ Flask-WTF
 Flask-Assets
 cssmin
 pyScss
+jsmin

@@ -89,7 +89,6 @@ scss_bundle = Bundle(
     'scss/buttons.scss',
     'scss/icons.scss',
     filters='apyscss',
-    #filters='scss',
     output=path.join(assets_out_dir, 'style_bundle.css'),
     debug=False,
 )

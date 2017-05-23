@@ -18,15 +18,17 @@ class PySCSSFilter(Filter):
 
     def setup(self):
         try:
-            from scss import Scss
+            from scss.compiler import Compiler
         except ImportError:
             raise EnvironmentError('The "pyScss" package is not installed.')
         else:
-            import scss
-            scss.LOAD_PATHS = path.join(path.abspath(path.dirname(__file__)), 'static', 'scss')
-            self.scss = Scss()
+
+            search_path = [
+                path.join(path.abspath(path.dirname(__file__)), 'static', 'scss')
+            ]
+            self.compiler = Compiler(search_path=search_path)
 
     def input(self, _in, out, **kw):
-        out.write(self.scss.compile(_in.read()))
+        out.write(self.compiler.compile_string(_in.read()))
 
 register_filter(PySCSSFilter)
