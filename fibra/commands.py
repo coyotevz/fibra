@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from flask_script import Manager
+import click
 from fibra import app
 
-manager = Manager(app)
-
-
-@manager.command
+@app.cli.command()
 def initdb():
+    """Creates database tables"""
     from fibra.models import db
     db.create_all(app=app)
 
 
-def main():
-    manager.run()
-
-
-if __name__ == '__main__':
-    main()
+@app.cli.command()
+def dropdb():
+    """Drops all database tables"""
+    from fibra.models import db
+    if click.confirm("Are you sure ? You will lose all your data"):
+        db.drop_all()
