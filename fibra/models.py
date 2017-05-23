@@ -35,10 +35,10 @@ class User(db.Model):
 class Customer(db.Model):
     __tablename__ = 'customers'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.UnicodeText(40), nullable=False)
-    address = db.Column(db.UnicodeText(80))
-    cuit = db.Column(db.UnicodeText(13))
-    notes = db.Column(db.UnicodeText)
+    name = db.Column(db.Text, nullable=False)
+    address = db.Column(db.Text)
+    cuit = db.Column(db.Text)
+    notes = db.Column(db.Text)
     contacts = db.relationship('Contact', backref='customer', lazy='dynamic')
     invoices = db.relationship('Invoice', backref='customer', lazy='dynamic')
 
@@ -89,12 +89,12 @@ class Customer(db.Model):
 class Contact(db.Model):
     __tablename__ = 'contacts'
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.UnicodeText(40), nullable=False)
-    last_name = db.Column(db.UnicodeText(40))
-    phone = db.Column(db.UnicodeText(20))
-    mail = db.Column(db.UnicodeText(40))
-    role = db.Column(db.UnicodeText(20))
-    notes = db.Column(db.UnicodeText)
+    first_name = db.Column(db.Text, nullable=False)
+    last_name = db.Column(db.Text)
+    phone = db.Column(db.Text)
+    mail = db.Column(db.Text)
+    role = db.Column(db.Text)
+    notes = db.Column(db.Text)
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'),
                             nullable=False, index=True)
 
@@ -109,7 +109,7 @@ class Contact(db.Model):
 class Invoice(db.Model):
     __tablename__ = 'invoices'
     id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.UnicodeText(10), nullable=False)
+    type = db.Column(db.Text, nullable=False)
     point_sale = db.Column(db.Integer, nullable=False)
     number = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Numeric(10, 2), nullable=False)
@@ -180,7 +180,7 @@ class Payment(db.Model):
     amount = db.Column(db.Numeric(10, 2), nullable=False)
     date = db.Column(db.Date, nullable=False)
     receipt_number = db.Column(db.Integer, unique=True)
-    notes = db.Column(db.UnicodeText)
+    notes = db.Column(db.Text)
 
     invoices = association_proxy('invoice_payments', 'invoice')
 
