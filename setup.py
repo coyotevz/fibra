@@ -4,12 +4,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='Fibra',
-    version='0.2',
+    version='0.3',
     author = 'Augusto Roccasalva',
-    author_email = 'augusto@rocctech.com.ar',
-    url = 'http://dev.rocctech.com.ar/projects/fibra',
+    author_email = 'augusto@rioplomo.com.ar',
+    url = 'http://github.com/coyotevz/fibra',
     description = 'Simple Web Based Customer Accounts Tracker',
-    download_url = 'http://dev.rocctech.com.ar/projects/fibra/wiki/Downloads',
     classifiers = [
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
@@ -39,8 +38,4 @@ setup(
         'cssmin',
         'pyScss',
     ],
-    entry_points = """\
-    [console_scripts]
-    fibra = fibra.commands:main
-    """
 )
