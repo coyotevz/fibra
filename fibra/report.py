@@ -7,7 +7,7 @@ from datetime import date
 try:
     from cStringIO import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from io import StringIO
 
 from sqlalchemy import func
 from werkzeug.datastructures import Headers
@@ -229,7 +229,7 @@ _pdfDocEncoding = (
 assert len(_pdfDocEncoding) == 256
 
 _pdfDocEncoding_rev = {}
-for i in xrange(256):
+for i in range(256):
     char = _pdfDocEncoding[i]
     if char == u"\u0000":
         continue

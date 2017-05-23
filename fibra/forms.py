@@ -3,12 +3,13 @@
 import locale
 import decimal
 
-from flask_wtf import (
-        Form, TextField, TextAreaField, IntegerField, DecimalField, DateField,
-        HiddenField, SubmitField, Required, Optional, Length, NumberRange
+from flask_wtf import Form
+from wtforms import (
+    widgets, TextField, TextAreaField, IntegerField, DecimalField, DateField,
+    HiddenField, SubmitField
 )
+from wtforms.validators import Required, Optional, Length, NumberRange
 
-from wtforms import widgets
 from wtforms.ext.sqlalchemy.fields import (
         QuerySelectField, QuerySelectMultipleField
 )
@@ -90,7 +91,7 @@ class PaymentForm(CustomerPaymentForm):
         if self.customer.validate(self):
             customer = self.customer.data
 
-            # 2. Build query for customer invoices 
+            # 2. Build query for customer invoices
             self.invoices.query = Invoice.query.filter(Invoice.customer_id==customer.id)\
                                                .filter(Invoice.state.in_([u'PENDING', u'EXPIRED']))
             return super(PaymentForm, self).validate()

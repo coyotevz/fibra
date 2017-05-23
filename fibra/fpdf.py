@@ -390,7 +390,7 @@ class FPDF(object):
         cw=self.current_font['cw']
         w=0
         l=len(s)
-        for i in xrange(0, l):
+        for i in range(0, l):
             w += cw.get(s[i],0)
         return w*self.font_size/1000.0
 
@@ -437,7 +437,7 @@ class FPDF(object):
             #Search existing encodings
             d=0
             nb=len(self.diffs)
-            for i in xrange(1,nb+1):
+            for i in range(1,nb+1):
                 if(self.diffs[i]==diff):
                     d=i
                     break
@@ -884,9 +884,9 @@ class FPDF(object):
             else:
                 dest='F'
         if dest=='I':
-            print self.buffer
+            print(self.buffer)
         elif dest=='D':
-            print self.buffer
+            print(self.buffer)
         elif dest=='F':
             #Save to local file
             f=file(name,'wb')
@@ -922,7 +922,7 @@ class FPDF(object):
         nb=self.page
         if hasattr(self,'str_alias_nb_pages'):
             #Replace number of pages
-            for n in xrange(1,nb+1):
+            for n in range(1,nb+1):
                 self.pages[n]=self.pages[n].replace(self.str_alias_nb_pages,str(nb))
         if(self.def_orientation=='P'):
             w_pt=self.fw_pt
@@ -934,7 +934,7 @@ class FPDF(object):
             filter='/Filter /FlateDecode '
         else:
             filter=''
-        for n in xrange(1,nb+1):
+        for n in range(1,nb+1):
             #Page
             self._newobj()
             self._out('<</Type /Page')
@@ -974,7 +974,7 @@ class FPDF(object):
         self._out('1 0 obj')
         self._out('<</Type /Pages')
         kids='/Kids ['
-        for i in xrange(0,nb):
+        for i in range(0,nb):
             kids+=str(3+2*i)+' 0 R '
         self._out(kids+']')
         self._out('/Count '+str(nb))
@@ -1052,7 +1052,7 @@ class FPDF(object):
                 self._newobj()
                 cw=font['cw']
                 s='['
-                for i in xrange(32,256):
+                for i in range(32,256):
                     # Get doesn't rise exception; returns 0 instead of None if not set
                     s+=str(cw.get(chr(i)) or 0)+' '
                 self._out(s+']')
@@ -1101,7 +1101,7 @@ class FPDF(object):
                 self._out(info['parms'])
             if('trns' in info and type([])==info['trns']):
                 trns=''
-                for i in xrange(0,len(info['trns'])):
+                for i in range(0,len(info['trns'])):
                     trns+=str(info['trns'][i])+' '+str(info['trns'][i])+' '
                 self._out('/Mask ['+trns+']')
             self._out('/Length '+str(len(info['data']))+'>>')
@@ -1205,7 +1205,7 @@ class FPDF(object):
         self._out('xref')
         self._out('0 '+(str(self.n+1)))
         self._out('0000000000 65535 f ')
-        for i in xrange(1,self.n+1):
+        for i in range(1,self.n+1):
             self._out(sprintf('%010d 00000 n ',self.offsets[i]))
         #Trailer
         self._out('trailer')
@@ -1270,7 +1270,7 @@ class FPDF(object):
         try:
             f = open(filename, 'rb')
             im = Image.open(f)
-        except Exception, e:
+        except Exception as e:
             self.error('Missing or incorrect image file: %s. error: %s' % (filename, str(e)))
         else:
             a = im.size
@@ -1425,7 +1425,7 @@ class FPDF(object):
         # add start and stop codes
         code = 'AA' + code.lower() + 'ZA'
 
-        for i in xrange(0, len(code), 2):
+        for i in range(0, len(code), 2):
             # choose next pair of digits
             char_bar = code[i];
             char_space = code[i+1];
@@ -1437,10 +1437,10 @@ class FPDF(object):
 
             # create a wide/narrow-sequence (first digit=bars, second digit=spaces)
             seq = ''
-            for s in xrange(0, len(bar_char[char_bar])):
+            for s in range(0, len(bar_char[char_bar])):
                 seq += bar_char[char_bar][s] + bar_char[char_space][s]
 
-            for bar in xrange(0, len(seq)):
+            for bar in range(0, len(seq)):
                 # set line_width depending on value
                 if seq[bar] == 'n':
                     line_width = narrow
@@ -1510,17 +1510,17 @@ class FPDF(object):
         code = txt
 
         code = code.upper()
-        for i in xrange (0, len(code), 2):
+        for i in range (0, len(code), 2):
             char_bar = code[i];
 
             if not char_bar in bar_char.keys():
                 raise RuntimeError ('Caracter "%s" inválido para el código de barras' % char_bar)
 
             seq= ''
-            for s in xrange(0, len(bar_char[char_bar])):
+            for s in range(0, len(bar_char[char_bar])):
                 seq += bar_char[char_bar][s]
 
-            for bar in xrange(0, len(seq)):
+            for bar in range(0, len(seq)):
                 if seq[bar] == 'n':
                     line_width = narrow
                 else:
@@ -1536,7 +1536,7 @@ class FPDF(object):
 # Fonts:
 fpdf_charwidths['courier']={}
 
-for i in xrange(0,256):
+for i in range(0,256):
     fpdf_charwidths['courier'][chr(i)]=600
     fpdf_charwidths['courierB']=fpdf_charwidths['courier']
     fpdf_charwidths['courierI']=fpdf_charwidths['courier']
