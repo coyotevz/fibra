@@ -7,6 +7,7 @@ class Config(object):
     TESTING = False
     SECRET_KEY = '<must be secret>' # use os.urandom(24) to generate this
     ASSETS_OUTPUT_DIR = 'assets'
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'postgresql://nobix:nobix@localhost/fibra'
