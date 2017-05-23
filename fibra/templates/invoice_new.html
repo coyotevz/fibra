@@ -9,7 +9,7 @@
   <div class="fieldrow first">
     {{ render_field(form.customer, required="required", autofocus="autofocus") }}
   </div>
-  <div class="fieldrow">  
+  <div class="fieldrow">
     {{ render_field(form.type, required="required") }}
     {{ render_field(form.point_sale, required="required") }}
     {{ render_field(form.number, required="required", autocomplete="off") }}
@@ -19,10 +19,10 @@
   <div class="fieldrow">
     {{ render_field(form.total, required="required", autocomplete="off", class="moneyformat") }}
   </div>
-  <div class="fieldrow">  
+  <div class="fieldrow">
     {{ render_field(form.notes, cols=60) }}
   </div>
-  <div class="fieldrow last">  
+  <div class="fieldrow last">
     {{ form_button('Guardar') }}
   </div>
 
@@ -71,5 +71,5 @@
   });
 </script>
 {% endblock %}
-{# vim:ft=xhtml.jinja:sw=2
+{# vim:ft=htmljinja:sw=2
 #}
