@@ -24,7 +24,7 @@ def index():
 @app.route('/customers/')
 def customer_list():
     customers = Customer.query.join(Invoice)\
-                    .filter(Invoice.state.in_([u'PENDING', u'EXPIRED']))\
+                    .filter(Invoice.state.in_(['PENDING', 'EXPIRED']))\
                     .order_by(Invoice.expiration_date.asc())
     return render_template("customer_list.html", customers=customers)
 
@@ -32,7 +32,7 @@ def customer_list():
 @app.route('/customers/report/')
 def customers_report():
     customers = Customer.query.join(Invoice)\
-                    .filter(Invoice.state.in_([u'PENDING', u'EXPIRED']))\
+                    .filter(Invoice.state.in_(['PENDING', 'EXPIRED']))\
                     .order_by(Invoice.expiration_date.asc())
     report = GeneralReport(query=customers)
     return report.response()
@@ -56,10 +56,10 @@ def customer_report(customer_id):
 @app.route('/customers/new/', methods=['GET', 'POST'])
 def customer_edit(customer_id=None):
     customer = Customer()
-    msg = u"El nuevo cliente se creó satisfactoriamente"
+    msg = "El nuevo cliente se creó satisfactoriamente"
     if customer_id:
         customer = Customer.query.get_or_404(customer_id)
-        msg = u"El cliente se editó satisfactoriamente"
+        msg = "El cliente se editó satisfactoriamente"
     if 'customer_name' in request.cookies and not customer.name:
         customer.name = url_unquote(request.cookies.get('customer_name'))
     form = CustomerForm(obj=customer)
@@ -84,10 +84,10 @@ def customer_edit(customer_id=None):
 def customer_edit_invoice(customer_id, invoice_id=None):
     customer = Customer.query.get_or_404(customer_id)
     invoice = Invoice(issue_date=date.today())
-    msg = u"El nuevo documento se agregó a <strong>%s</strong> satisfactoriamente" % customer.name
+    msg = "El nuevo documento se agregó a <strong>%s</strong> satisfactoriamente" % customer.name
     if invoice_id:
         invoice = Invoice.query.get_or_404(invoice_id)
-        msg = u"El documento se editó satisfactoriamente"
+        msg = "El documento se editó satisfactoriamente"
     form = CustomerInvoiceForm(obj=invoice)
     if form.validate_on_submit():
         form.populate_obj(invoice)
@@ -116,7 +116,7 @@ def customer_add_payment(customer_id):
         payment.add_invoices(invoices)
         db.session.add(payment)
         db.session.commit()
-        flash(u"El pago se agregó a <strong>%s</strong> satisfactoriamente" % customer.name)
+        flash("El pago se agregó a <strong>%s</strong> satisfactoriamente" % customer.name)
         return redirect(url_for('customer_detail', customer_id=customer.id))
     return render_template("customer_add_payment.html", form=form, customer=customer)
 
@@ -129,11 +129,11 @@ def contact_edit(customer_id=None, contact_id=None):
     if customer_id:
         contact = Contact()
         customer = Customer.query.get_or_404(customer_id)
-        msg = u"El contacto se agregó a <strong>%s</strong> satisfactoriamente" % customer.name
+        msg = "El contacto se agregó a <strong>%s</strong> satisfactoriamente" % customer.name
     if contact_id:
         contact = Contact.query.get_or_404(contact_id)
         customer = contact.customer
-        msg = u"El contacto se editó satisfactoriamente"
+        msg = "El contacto se editó satisfactoriamente"
     form = ContactForm(obj=contact)
     if form.validate_on_submit():
         form.populate_obj(contact)
@@ -167,7 +167,7 @@ def invoice_new():
             invoice.id = None
             db.session.add(invoice)
         db.session.commit()
-        flash(u"El documento se agregó a <strong>%s</strong> satisfactoriamente" % form.customer.data.name)
+        flash("El documento se agregó a <strong>%s</strong> satisfactoriamente" % form.customer.data.name)
         return redirect(url_for('customer_detail', customer_id=form.customer.data.id))
     return render_template('invoice_new.html', form=form)
 
@@ -181,7 +181,7 @@ def invoice_add_payment(invoice_id):
         form.populate_obj(payment)
         invoice.add_payment(payment)
         db.session.commit()
-        flash(u"El pago se agregó a <strong>%s</strong> satisfactoriamente" % invoice.customer.name)
+        flash("El pago se agregó a <strong>%s</strong> satisfactoriamente" % invoice.customer.name)
         return redirect(url_for('customer_detail', customer_id=invoice.customer.id))
     return render_template("invoice_add_payment.html", form=form, invoice=invoice)
 
@@ -192,13 +192,13 @@ def invoice_add_payment(invoice_id):
 def payment_new():
     form = PaymentForm(date=date.today())
     form.customer.query = Customer.query.filter(Customer.id==Invoice.customer_id)\
-                                        .filter(Invoice.state.in_([u'PENDING', u'EXPIRED']))
+                                        .filter(Invoice.state.in_(['PENDING', 'EXPIRED']))
     if form.validate_on_submit():
         payment = Payment()
         form.populate_obj(payment)
         db.session.add(payment)
         db.session.commit()
-        flash(u"El pago se agregó a <strong>%s</strong> satisfactoriamente" % form.customer.data.name)
+        flash("El pago se agregó a <strong>%s</strong> satisfactoriamente" % form.customer.data.name)
         return redirect(url_for('customer_list'))
     return render_template('payment_new.html', form=form)
 
@@ -214,13 +214,13 @@ def ajax_search_customers():
             'url': url_for('customer_detail', customer_id=i.id)
         }
 
-    term = unicode(request.args.get('q', '', type=unicode)).strip().split()
+    term = str(request.args.get('q', '', type=str)).strip().split()
     if term:
         query = Customer.query
         for t in term:
             query = query.filter(Customer.name.ilike('%'+t+'%'))
         customers = query.values('id', 'name')
-        retval = map(_serialize, customers)
+        retval = list(map(_serialize, customers))
     else:
         retval = []
     return render_json(retval)
@@ -240,17 +240,17 @@ def ajax_search_invoices():
         }
 
     customer_id = request.args.get('customer', None, type=int)
-    states = request.args.getlist('state', type=str) or [u'PENDING', u'EXPIRED']
+    states = request.args.getlist('state', type=str) or ['PENDING', 'EXPIRED']
 
     query = search_invoices_query(customer_id, states)
-    return render_json(map(_serialize, query))
+    return render_json(list(map(_serialize, query)))
 
 
 # helpers
-def search_invoices_query(customer_id=None, states=[u'PENDING', u'EXPIRED']):
+def search_invoices_query(customer_id=None, states=['PENDING', 'EXPIRED']):
     query = Invoice.query.order_by(Invoice.expiration_date.asc())
     if customer_id:
         query = query.join(Customer).filter(Customer.id==customer_id)
     if len(states) == 1 and states[0] in ("all", "*"):
-        states = STATES.keys()
+        states = list(STATES.keys())
     return query.filter(Invoice.state.in_(states))

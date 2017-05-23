@@ -16,9 +16,9 @@ db.Numeric = Numeric
 
 
 STATES = {
-    u'EXPIRED': 1,
-    u'PENDING': 2,
-    u'PAID':    3,
+    'EXPIRED': 1,
+    'PENDING': 2,
+    'PAID':    3,
 }
 
 
@@ -29,7 +29,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True)
 
     def __repr__ (self):
-        return u'<User %r>' % self.username
+        return '<User %r>' % self.username
 
 
 class Customer(db.Model):
@@ -43,11 +43,11 @@ class Customer(db.Model):
     invoices = db.relationship('Invoice', backref='customer', lazy='dynamic')
 
     def __repr__(self):
-        return u'<Customer %r>' % self.name
+        return '<Customer %r>' % self.name
 
     def get_balance(self, state=None):
         if not state:
-            invoices = self.invoices.filter(Invoice.state.in_([u'PENDING', u'EXPIRED']))
+            invoices = self.invoices.filter(Invoice.state.in_(['PENDING', 'EXPIRED']))
         else:
             invoices = self.invoices.filter(Invoice.state==state)
         return sum([i.balance for i in invoices]) or Decimal(0)
@@ -56,13 +56,13 @@ class Customer(db.Model):
 
     @hybrid_property
     def state(self):
-        s = u'PAID'
-        for i in self.invoices.filter(Invoice.state.in_([u'PENDING', u'EXPIRED'])):
+        s = 'PAID'
+        for i in self.invoices.filter(Invoice.state.in_(['PENDING', 'EXPIRED'])):
             i._check_state()
-        if self.invoices.filter(Invoice.state==u'PENDING').count() > 0:
-            s = u'PENDING'
-        if self.invoices.filter(Invoice.state==u'EXPIRED').count() > 0:
-            s = u'EXPIRED'
+        if self.invoices.filter(Invoice.state=='PENDING').count() > 0:
+            s = 'PENDING'
+        if self.invoices.filter(Invoice.state=='EXPIRED').count() > 0:
+            s = 'EXPIRED'
         return s
 
     @state.expression
@@ -71,18 +71,18 @@ class Customer(db.Model):
 
     @classmethod
     def get_debtors(cls):
-        return cls.query.join(Invoice).filter(Invoice.state.in_([u'PENDING', u'EXPIRED']))
+        return cls.query.join(Invoice).filter(Invoice.state.in_(['PENDING', 'EXPIRED']))
 
     @property
     def next_expiration(self):
         rv = date.max
-        next_invoice = self.invoices.filter(Invoice.state.in_([u'PENDING', u'EXPIRED']))\
+        next_invoice = self.invoices.filter(Invoice.state.in_(['PENDING', 'EXPIRED']))\
                                     .order_by(Invoice.expiration_date.asc()).first()
         if next_invoice:
             rv = next_invoice.expiration_date
         return rv
 
-    def count_invoices(self, states=[u'PENDING', u'EXPIRED']):
+    def count_invoices(self, states=['PENDING', 'EXPIRED']):
         return self.invoices.filter(Invoice.state.in_(states)).count()
 
 
@@ -103,7 +103,7 @@ class Contact(db.Model):
         return " ".join([self.first_name, self.last_name])
 
     def __repr__(self):
-        return u'<Contact %r>' % self.name
+        return '<Contact %r>' % self.name
 
 
 class Invoice(db.Model):
@@ -113,7 +113,7 @@ class Invoice(db.Model):
     point_sale = db.Column(db.Integer, nullable=False)
     number = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Numeric(10, 2), nullable=False)
-    _state = db.Column("state", db.Enum(u'EXPIRED', u'PENDING', u'PAID', name=u'State'), default='PENDING')
+    _state = db.Column("state", db.Enum('EXPIRED', 'PENDING', 'PAID', name='State'), default='PENDING')
     issue_date = db.Column(db.Date)
     expiration_date = db.Column(db.Date)
     notes = db.Column(db.UnicodeText)
@@ -130,11 +130,11 @@ class Invoice(db.Model):
 
     @property
     def fulldesc(self):
-        return u"%s %04d-%08d" % (self.type, self.point_sale, self.number)
+        return "%s %04d-%08d" % (self.type, self.point_sale, self.number)
 
     @property
     def cancelled_date(self):
-        if self.state in (u'PENDING', u'EXPIRED'):
+        if self.state in ('PENDING', 'EXPIRED'):
             return None
         return Payment.query.join('invoice_payments')\
                             .filter(InvoicePayment.invoice==self)\
@@ -142,7 +142,7 @@ class Invoice(db.Model):
 
     @hybrid_property
     def state(self):
-        if self._state in (u'PENDING', u'EXPIRED'):
+        if self._state in ('PENDING', 'EXPIRED'):
             self._check_expired()
             self._check_paid()
             db.session.commit()
@@ -153,19 +153,19 @@ class Invoice(db.Model):
         self._state = value
 
     def _check_state(self):
-        if self._state in (u'PENDING', u'EXPIRED'):
+        if self._state in ('PENDING', 'EXPIRED'):
             self._check_expired()
             self._check_paid()
             db.session.commit()
 
     def _check_expired(self):
-        if self._state == u'PENDING' and self.expiration_date < date.today():
-            self._state = u'EXPIRED'
+        if self._state == 'PENDING' and self.expiration_date < date.today():
+            self._state = 'EXPIRED'
 
     def _check_paid(self):
         if InvoicePayment.query.filter(InvoicePayment.invoice==self).count() > 0:
             if self.balance <= Decimal(0):
-                self._state = u'PAID'
+                self._state = 'PAID'
 
     @property
     def balance(self):

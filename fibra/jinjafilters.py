@@ -8,7 +8,7 @@ def dateformat_filter(date, format="%d %b, %Y"):
         return date.strftime(format)
     return ''
 
-_when = [u"hoy", u"ayer", u"mañana"]
+_when = ["hoy", "ayer", "mañana"]
 
 def timeago_filter(date):
     if date:
@@ -19,9 +19,9 @@ def timeago_filter(date):
             return _when[days]
 
         if days < 0: # future
-            msg = u"en %s"
+            msg = "en %s"
         elif days > 0:
-            msg = u"hace %s"
+            msg = "hace %s"
         else:
             return ''
 
@@ -29,11 +29,11 @@ def timeago_filter(date):
         months, days = divmod(days, 30)
         chain = []
         if years:
-            chain.append(u"%d año" % (years,) + ("s" if years > 1 else ""))
+            chain.append("%d año" % (years,) + ("s" if years > 1 else ""))
         if months:
-            chain.append(u"%d mes" % (months,) + ("es" if months > 1 else ""))
+            chain.append("%d mes" % (months,) + ("es" if months > 1 else ""))
         if days:
-            chain.append(u"%d día" % (days,) + ("s" if days > 1 else ""))
+            chain.append("%d día" % (days,) + ("s" if days > 1 else ""))
         if len(chain) == 1:
             chain = "%s" % chain[0]
         else:
