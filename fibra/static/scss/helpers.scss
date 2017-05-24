@@ -180,8 +180,8 @@ $default-text-shadow-blur:     1px  !default;
 }
 
 @mixin icon-sprite($y: 0) {
-  background-position: left -#{$y};
-  a:hover &, .button:hover &, &:hover { background-position: right -#{$y}; }
+  background-position: left -$y;
+  a:hover &, .button:hover &, &:hover { background-position: right -$y; }
 }
 
 
