@@ -6,3 +6,4 @@ Flask-Assets
 cssmin
 pyScss
 jsmin
+psycopg2
