@@ -146,7 +146,7 @@ class CustomerReport(Report):
             self.invoice_line(invoice)
         self.customer_balance(customer.balance)
 
-        if self.kwargs.get('detailed', False):
+        if self.kwargs.get('detailed', True):
             for invoice in customer.invoices.filter(Invoice.state=='PAID')\
                                             .order_by(Invoice.expiration_date.desc()):
                 self.invoice_line(invoice)

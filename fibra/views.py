@@ -48,7 +48,8 @@ def customer_detail(customer_id):
 @app.route('/customers/<int:customer_id>/report/')
 def customer_report(customer_id):
     customer = Customer.query.get_or_404(customer_id)
-    report = CustomerReport(customer=customer)
+    detailed = request.args.get('detailed', False, type=bool)
+    report = CustomerReport(customer=customer, detailed=detailed)
     return report.response()
 
 
