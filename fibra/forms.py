@@ -3,7 +3,7 @@
 import locale
 import decimal
 
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import (
     widgets, TextField, TextAreaField, IntegerField, DecimalField, DateField,
     HiddenField, SubmitField
@@ -37,7 +37,7 @@ class LocaleDecimalField(DecimalField):
             return retval
 
 
-class CustomerForm(Form):
+class CustomerForm(FlaskForm):
     id = HiddenField()
     name = TextField('Nombre', validators=[Required()])
     address = TextField(u'Dirección')
@@ -45,7 +45,7 @@ class CustomerForm(Form):
     notes = TextAreaField('Notas')
 
 
-class ContactForm(Form):
+class ContactForm(FlaskForm):
     id = HiddenField()
     first_name = TextField('Nombre', validators=[Required()])
     last_name = TextField('Apellido')
@@ -55,7 +55,7 @@ class ContactForm(Form):
     notes = TextAreaField('Notas')
 
 
-class CustomerInvoiceForm(Form):
+class CustomerInvoiceForm(FlaskForm):
     id = HiddenField()
     type = TextField(u'Tipo', validators=[Required(), Length(min=3, max=3)])
     point_sale = IntegerField(u'PV', validators=[Required(), NumberRange(min=1)])
@@ -70,7 +70,7 @@ class InvoiceForm(CustomerInvoiceForm):
     customer = QuerySelectField('Cliente', get_label='name', allow_blank=True)
 
 
-class InvoicePaymentForm(Form):
+class InvoicePaymentForm(FlaskForm):
     date = DateField('Fecha de pago', validators=[Required()], format="%d/%m/%Y")
     receipt_number = IntegerField('Recibo', validators=[Optional()])
     amount = LocaleDecimalField('Monto', validators=[Required(), NumberRange(min=0)])
