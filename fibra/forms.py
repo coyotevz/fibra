@@ -10,8 +10,8 @@ from wtforms import (
 )
 from wtforms.validators import Required, Optional, Length, NumberRange
 
-from wtforms.ext.sqlalchemy.fields import (
-        QuerySelectField, QuerySelectMultipleField
+from wtforms_sqlalchemy.fields import (
+    QuerySelectField, QuerySelectMultipleField
 )
 
 from fibra.models import Invoice

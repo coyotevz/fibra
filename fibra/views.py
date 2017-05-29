@@ -119,7 +119,7 @@ def customer_add_payment(customer_id):
         db.session.commit()
         flash("El pago se agregó a <strong>%s</strong> satisfactoriamente" % customer.name)
         return redirect(url_for('customer_detail', customer_id=customer.id))
-    return render_template("customer_add_payment.html", form=form, customer=customer)
+    return render_template("customer_add_payment.html", form=form, customer=customer, Invoice=Invoice)
 
 
 ## Contact ##

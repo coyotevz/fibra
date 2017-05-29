@@ -11,7 +11,7 @@
       {{ form.invoices.label }}
       <table id="{{ form.invoices.id }}" class="list-browser" cellspacing="0" cellpadding="0">
         {% for invoice_field in form.invoices %}
-        {% with invoice = customer.invoices.get(invoice_field.data|int) %}
+        {% with invoice = Invoice.query.get(invoice_field.data|int) %}
         <tr class="{{ invoice.state.lower() }}">
 
           <td>{{ invoice_field }}</td>
