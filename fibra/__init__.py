@@ -2,9 +2,6 @@
 
 import os
 from os import path
-import locale
-
-locale.setlocale(locale.LC_ALL, '')
 
 from flask import Flask
 from flask_assets import Environment, Bundle

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import locale
 import decimal
 
+from babel.numbers import parse_decimal, format_decimal
 from flask_wtf import FlaskForm
 from wtforms import (
     widgets, TextField, TextAreaField, IntegerField, DecimalField, DateField,
@@ -16,7 +16,7 @@ from wtforms_sqlalchemy.fields import (
 
 from fibra.models import Invoice
 
-locale.setlocale(locale.LC_ALL, '')
+LOCALE = 'es_AR'
 
 
 class LocaleDecimalField(DecimalField):
@@ -25,14 +25,14 @@ class LocaleDecimalField(DecimalField):
     def process_formdata(self, valuelist):
         if valuelist:
             try:
-                self.data = decimal.Decimal(str(locale.atof(valuelist[0])))
+                self.data = parse_decimal(str(valuelist[0]), locale=LOCALE)
             except (decimal.InvalidOperation, ValueError):
                 raise ValueError(self.gettext(u'Not a valid decimal value'))
 
     def _value(self):
         retval = super(LocaleDecimalField, self)._value()
         try:
-            return retval.replace('.', locale.localeconv()['decimal_point'])
+            return format_decimal(retval, locale=LOCALE)
         except:
             return retval
 

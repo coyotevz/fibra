@@ -2,6 +2,7 @@ Flask
 Flask-SQLAlchemy
 Flask-WTF
 WTForms-SQLAlchemy
+babel
 fpdf
 Flask-Assets
 cssmin
